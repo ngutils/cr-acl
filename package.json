@@ -1,0 +1,15 @@
+{
+    "name": "cr-acl",
+    "devDependencies": {
+        "karma": "~0.12",
+        "karma-cli": "~0",
+        "karma-phantomjs-launcher": "~0",
+        "karma-jasmine": "~0.2.*",
+        "phantomjs": "~1.9",
+        "bower": "~1"
+    },
+    "scripts": {
+        "postinstall" : "./node_modules/.bin/bower install",
+        "test": "./node_modules/.bin/karma start --single-run"
+    }
+}
