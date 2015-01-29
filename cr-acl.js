@@ -61,6 +61,9 @@ angular.module("cr.acl", [])
 
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      if(!toState.data || !toState.data.is_granted){
+        return crAcl;
+      }
       if(toState.data.is_granted[0] === "*"){
         return crAcl;
       }
@@ -69,7 +72,9 @@ angular.module("cr.acl", [])
 
       if(!isGranted && self.redirect !== false){
         event.preventDefault();
-        $state.go(self.redirect);
+        if(self.redirect != toState.name) {
+          $state.go(self.redirect);
+        }
       }
     });
 
