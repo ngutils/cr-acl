@@ -2,6 +2,7 @@
     "name": "cr-acl",
     "dependencies": {
         "angular": ">=1.2.0",
+        "angular-animate": ">=1.2.0",
         "angular-ui-router": "~0.2.1"
     },
     "devDependencies": {

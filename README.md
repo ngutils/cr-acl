@@ -1,5 +1,5 @@
 # CrAcl
-[![Build Status](https://travis-ci.org/ngutils/cr-acl.svg)](https://travis-ci.org/ngutils/cr-acl)  
+[![Build Status](https://travis-ci.org/ngutils/cr-acl.svg)](https://travis-ci.org/ngutils/cr-acl)
 Access control list for AngularJs.
 
 ```javascript
@@ -23,6 +23,7 @@ You can set a role hierarchy configuration.
   });
 }])
 ```
+
 Now you can set a list of granted role for single state
 ```javascript
 .config(function config($stateProvider ) {
@@ -69,3 +70,10 @@ You can override it
   crAcl.setRedirct("unauth");
 }])
 ```
+
+## Directive
+I'm writing a new directive to manage pieces of page visibility
+```html
+<div cr-granted="ROLE_GUEST">Welcome <span>if you are GUEST don't show this stuff</span></div>
+```
+This directive support multiple roles you can write a string separated by comma

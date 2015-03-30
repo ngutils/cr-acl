@@ -81,4 +81,27 @@ angular.module("cr.acl", [])
     return crAcl;
 
   }];
+}])
+.directive("crGranted", ['crAcl', '$animate', function(acl, $animate){
+  return {
+    restrict: "A",
+    replace: false,
+    transclude: 'element',
+    terminal: true,
+    link: function(scope, elem, attr, ctrl, $transclude){
+      scope.$watch(attr.crGranted, function(){
+      var allowedRoles = attr.crGranted.split(",");
+      if(allowedRoles.indexOf(acl.getRole()) != -1) {
+        $transclude(function(clone, newScope) {
+          childScope = newScope;
+          clone[clone.length++] = document.createComment(' end crGranted: ' + attr.crGranted + ' ');
+          block = {
+            clone: clone
+          };
+          $animate.enter(clone, elem.parent(), elem);
+        });
+      }
+      });
+    }
+  };
 }]);
