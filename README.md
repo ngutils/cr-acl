@@ -24,7 +24,7 @@ You can set a role hierarchy configuration.
 }])
 ```
 Now you can set a list of granted role for single state
-```
+```javascript
 .config(function config($stateProvider ) {
     $stateProvider.state('home', {
         url: '/home',
@@ -54,7 +54,7 @@ Now you can set a list of granted role for single state
 })
 ```
 After login you can set role of your admin into crAcl
-```
+```javascript
 $scope.login = function(){
     crAcl.setRole("ROLE_FREE");
 };
