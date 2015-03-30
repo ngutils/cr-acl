@@ -11,7 +11,12 @@ angular.module("cr.acl", [])
   self.roles = config.roles;
   self.redirect = config.redirect;
 
-
+  /**
+   * Your role is granted for this route?
+   * @param string identityRole
+   * @param array  sstateRolesGranted
+   * @return bool
+   */
   self.isGranted = function(identityRole, stateRolesGranted){
     var granted = false;
 
@@ -35,6 +40,10 @@ angular.module("cr.acl", [])
   this.$get = ['$q', '$rootScope', '$state', function($q, $rootScope, $state){
     var crAcl = {};
 
+    /**
+     * Configure roles tree
+     * @param arrat roles
+     */
     crAcl.setInheritanceRoles = function(roles){
         angular.forEach(roles, function(inheritance, roleName){
         if(roleName == "ROLE_USER" && roleName == "ROLE_GUEST"){
@@ -44,14 +53,25 @@ angular.module("cr.acl", [])
         });
     };
 
+    /**
+     * Set route name for redirect after unauthorized operation
+     */
     crAcl.setRedirect = function(redirectStateName){
         self.redirect = redirectStateName;
     };
 
+    /**
+     * Set Role
+     * @param string role
+     */
     crAcl.setRole = function(role){
         self.identityRole = role;
     };
 
+    /**
+    * Return your role
+    * @return string
+    */
     crAcl.getRole = function(){
         if(self.identityRole === undefined){
           return "ROLE_GUEST";
