@@ -29,4 +29,10 @@ describe('crGranted directive', function() {
     expect(element.html()).not.toContain("Ciao");
   });
 
+  it("Support to multiple role granted", function(){
+    element.append($compile("<div cr-granted='ROLE_USER, ROLE_GUEST'>Ciao</div>")($scope));
+    $scope.$apply();
+    expect(element.html()).toContain("Ciao");
+  });
+
 });
