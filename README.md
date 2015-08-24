@@ -1,5 +1,5 @@
 # CrAcl
-[![Build Status](https://travis-ci.org/ngutils/cr-acl.svg)](https://travis-ci.org/ngutils/cr-acl)
+[![Build Status](https://travis-ci.org/ngutils/cr-acl.svg?branch=master)](https://travis-ci.org/ngutils/cr-acl)
 Access control list for AngularJs.
 
 ```javascript
