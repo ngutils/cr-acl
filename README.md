@@ -1,7 +1,14 @@
-# CrAcl
+# crAcl
 [![Build Status](https://travis-ci.org/ngutils/cr-acl.svg?branch=master)](https://travis-ci.org/ngutils/cr-acl)
 
 Access control list for AngularJs.
+
+## Install
+
+You can use bower
+```bash
+bower install cr-acl
+```
 
 ```javascript
 angular.module(
@@ -12,6 +19,8 @@ angular.module(
         ]
 )
 ```
+
+## Configuration roles
 
 There are two fathers of all roles, `ROLE_USER` for authenticated users and `ROLE_GUEST` for anonymouse user.
 You can set a role hierarchy configuration.
@@ -24,6 +33,8 @@ You can set a role hierarchy configuration.
   });
 }])
 ```
+
+## Getting Started
 
 Now you can set a list of granted role for single state
 ```javascript
@@ -55,12 +66,15 @@ Now you can set a list of granted role for single state
     });
 })
 ```
+
 After login you can set role of your admin into crAcl
+
 ```javascript
 $scope.login = function(){
     crAcl.setRole("ROLE_FREE");
 };
 ```
+
 Default role is `ROLE_GUEST`
 
 If your user is not allowed for this route triggers a redirect to `unauthorized` state.
@@ -73,8 +87,11 @@ You can override it
 ```
 
 ## Directive
+
 I'm writing a new directive to manage pieces of page visibility
+
 ```html
 <div cr-granted="ROLE_GUEST">Welcome <span>if you are GUEST don't show this stuff</span></div>
 ```
+
 This directive support multiple roles you can write a string separated by comma
