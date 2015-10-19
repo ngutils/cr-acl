@@ -109,17 +109,28 @@ angular.module("cr.acl", [])
     transclude: 'element',
     terminal: true,
     link: function(scope, elem, attr, ctrl, $transclude){
-      scope.$watch(attr.crGranted, function(){
+      var content = false;
+      $transclude(function(clone, newScope) {
+        childScope = newScope;
+        clone[clone.length++] = document.createComment(' end crGranted: ' + attr.crGranted + ' ');
+        block = {
+          clone: clone
+        };
+        content = clone;
+      });
+
+
+      scope.$watch(function() {
+        return acl.getRole();
+      }, function(newV, oldV){
       var allowedRoles = attr.crGranted.split(",");
       if(allowedRoles.indexOf(acl.getRole()) != -1) {
-        $transclude(function(clone, newScope) {
-          childScope = newScope;
-          clone[clone.length++] = document.createComment(' end crGranted: ' + attr.crGranted + ' ');
-          block = {
-            clone: clone
-          };
-          $animate.enter(clone, elem.parent(), elem);
-        });
+        $animate.enter(content, elem.parent(), elem);
+      }
+      else {
+        if(content) {
+          content.remove();
+        }
       }
       });
     }
