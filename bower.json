@@ -1,5 +1,6 @@
 {
     "name": "cr-acl",
+    "version": "0.4.2",
     "dependencies": {
         "angular": ">=1.2.0",
         "angular-animate": ">=1.2.0",

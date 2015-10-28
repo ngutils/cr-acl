@@ -1,5 +1,6 @@
 {
     "name": "cr-acl",
+    "version": "0.4.2",
     "devDependencies": {
         "karma": "~0.12",
         "karma-cli": "~0",

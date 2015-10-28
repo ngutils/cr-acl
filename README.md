@@ -11,6 +11,12 @@ You can use bower
 ```bash
 bower install cr-acl
 ```
+add to your html:
+
+```html
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/cr-acl/cr-acl.js"></script>
+```
 then inject it in your app:
 
 ```javascript
