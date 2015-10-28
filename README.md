@@ -1,7 +1,9 @@
 # crAcl
 [![Build Status](https://travis-ci.org/ngutils/cr-acl.svg?branch=master)](https://travis-ci.org/ngutils/cr-acl)
 
-Access control list for AngularJs.
+## Overview
+
+crAcl is Access Control List module for AngularJs. It works with [UI-Router](https://github.com/angular-ui/ui-router) letting you to restrict the access of specific routes to a set of roles.
 
 ## Install
 
@@ -9,6 +11,7 @@ You can use bower
 ```bash
 bower install cr-acl
 ```
+then inject it in your app:
 
 ```javascript
 angular.module(
@@ -20,23 +23,48 @@ angular.module(
 )
 ```
 
-## Configuration roles
+## Role configuration
 
-There are two fathers of all roles, `ROLE_USER` for authenticated users and `ROLE_GUEST` for anonymouse user.
+There are two fathers of all roles: `ROLE_USER` for authenticated users and `ROLE_GUEST` for anonymous users.
 You can set a role hierarchy configuration.
 
 ```javascript
 .run(['crAcl', function run(crAcl) {
   crAcl.setInheritanceRoles({
-    "ROLE_FREE" : ["ROLE_USER"],
-    "ROLE_CLIENT" : ["ROLE_FREE", "ROLE_USER"]
+    "ROLE_CUSTOMER" : ["ROLE_USER"],
+    "ROLE_CLIENT" : ["ROLE_CUSTOMER", "ROLE_USER"]
   });
 }])
 ```
+In this exaple the role `ROLE_ADMIN` if over `ROLE_CUSTOMER` (that's father of `ROLE_USER`) and `ROLE_USER`.
 
-## Getting Started
+## Assign role to users
 
-Now you can set a list of granted role for single state
+
+Whenever you want (for example after a successful login action) you can set the role of a user with `crAcl` service (inject it into your controllers, services, directive...):
+
+```javascript
+$scope.login = function(){
+    crAcl.setRole("ROLE_USER");
+};
+```
+
+Default role is `ROLE_GUEST`
+
+If your user is not allowed for this route triggers a redirect to `unauthorized` state.
+You can override it in the run:
+
+```javascript
+.run(['crAcl', function run(crAcl) {
+  crAcl.setRedirct("your-login-state-name");
+}])
+```
+
+
+## Restrict route access
+
+Now you can set a list of granted role for single state:
+
 ```javascript
 .config(function config($stateProvider ) {
     $stateProvider.state('home', {
@@ -48,50 +76,38 @@ Now you can set a list of granted role for single state
             }
         },
         data:{
-          is_granted: ["ROLE_GUEST"]
+          is_granted: ["ROLE_USER"]
        }
     });
 
-    $stateProvider.state( 'try-free', {
-        url: '/free',
+    $stateProvider.state( 'dashboard', {
+        url: '/dashboard',
         views: {
             "main": {
-                controller: 'FreeCtrl',
-                templateUrl: 'home/free.tpl.html'
+                controller: 'DashboardCtrl',
+                templateUrl: 'home/dashboard.tpl.html'
             }
         },
         data:{
-          is_granted: ["ROLE_FREE"]
+          is_granted: ["ROLE_ADMIN"]
        }
     });
 })
 ```
 
-After login you can set role of your admin into crAcl
+In this example, the `home` route is accessible by both `ROLE_CUSTOMER` and `ROLE_ADMIN` (because that roles extend `ROLE_USER`) and the `dashboard` route is accessible only by `ROLE_ADMIN`.
 
-```javascript
-$scope.login = function(){
-    crAcl.setRole("ROLE_FREE");
-};
-```
-
-Default role is `ROLE_GUEST`
-
-If your user is not allowed for this route triggers a redirect to `unauthorized` state.
-You can override it
-
-```javascript
-.run(['crAcl', function run(crAcl) {
-  crAcl.setRedirct("unauth");
-}])
-```
 
 ## Directive
 
-I'm writing a new directive to manage pieces of page visibility
+You can prevent compilation of specific DOM components with the `cr-granted` directive:
 
 ```html
-<div cr-granted="ROLE_GUEST">Welcome <span>if you are GUEST don't show this stuff</span></div>
+<div cr-granted="ROLE_ADMIN">Hello Admin!</div>
 ```
 
-This directive support multiple roles you can write a string separated by comma
+This directive supports multiple roles:
+
+```html
+<div cr-granted="ROLE_CUSTOMER,ROLE_SUPPORT,ROLE_GUEST">Hello guys!</div>
+```
