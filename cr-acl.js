@@ -37,7 +37,7 @@ angular.module("cr.acl", [])
     return granted;
   };
 
-  this.$get = ['$q', '$rootScope', '$state', function($q, $rootScope, $state){
+  this.$get = ['$q', '$rootScope', '$injector', function($q, $rootScope, $injector){
     var crAcl = {};
 
     /**
@@ -79,8 +79,7 @@ angular.module("cr.acl", [])
         return self.identityRole;
     };
 
-
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+    var afterChangeStart = function(event, toState, toParams, fromState, fromParams) {
       if(!toState.data || !toState.data.is_granted){
         return crAcl;
       }
@@ -89,13 +88,33 @@ angular.module("cr.acl", [])
       }
       var is_allowed = (toState.data.is_granted !== undefined) ? toState.data.is_granted : ["ROLE_GUEST"];
       var isGranted = self.isGranted(crAcl.getRole(), is_allowed);
+      return isGranted;
+    };
 
-      if(!isGranted && self.redirect !== false){
-        event.preventDefault();
-        if(self.redirect != toState.name) {
-          $state.go(self.redirect);
-        }
-      }
+    $rootScope.$on('$stateChangeStart',  function(event, toState, toParams, fromState, fromParams) {
+        $injector.invoke(["$state", function($state) {
+          var isGranted = afterChangeStart(event, toState, toParams, fromState, fromParams);
+
+          if(!isGranted && self.redirect !== false){
+            event.preventDefault();
+            if(self.redirect != toState.name) {
+              $state.go(self.redirect);
+            }
+          }
+        }]);
+    });
+
+    $rootScope.$on('$routeChangeStart',  function(event, toState, toParams, fromState, fromParams) {
+        $injector.invoke(["$location", function($location) {
+          var isGranted = afterChangeStart(event, toState, toParams, fromState, fromParams);
+
+          if(!isGranted && self.redirect !== false){
+            event.preventDefault();
+            if(self.redirect != toState.name) {
+              $location.path(self.redirect);
+            }
+          }
+        }]);
     });
 
     return crAcl;
