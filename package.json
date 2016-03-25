@@ -10,7 +10,6 @@
         "bower": "~1"
     },
     "scripts": {
-        "postinstall" : "./node_modules/.bin/bower install",
         "test": "./node_modules/.bin/karma start --single-run"
     }
 }

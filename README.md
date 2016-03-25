@@ -62,7 +62,7 @@ You can override it in the run:
 
 ```javascript
 .run(['crAcl', function run(crAcl) {
-  crAcl.setRedirct("your-login-state-name");
+  crAcl.setRedirect("your-login-state-name");
 }])
 ```
 

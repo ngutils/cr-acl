@@ -69,6 +69,14 @@ angular.module("cr.acl", [])
     };
 
     /**
+     * Get all Roles
+     * @param array
+     */
+    crAcl.getRoles = function(){
+        return self.roles;
+    };
+
+    /**
     * Return your role
     * @return string
     */
@@ -128,30 +136,50 @@ angular.module("cr.acl", [])
     transclude: 'element',
     terminal: true,
     link: function(scope, elem, attr, ctrl, $transclude){
-      var content = false;
-      $transclude(function(clone, newScope) {
-        childScope = newScope;
-        clone[clone.length++] = document.createComment(' end crGranted: ' + attr.crGranted + ' ');
-        block = {
-          clone: clone
+        var content = false;
+        $transclude(function(clone, newScope) {
+            childScope = newScope;
+            clone[clone.length++] = document.createComment(' end crGranted: ' + attr.crGranted + ' ');
+            block = {
+                clone: clone
+            };
+            content = clone;
+        });
+
+
+        scope.$watch(function() {
+            return acl.getRole();
+        }, function(newV, oldV){
+
+            if (shouldBeShown()) {
+                $animate.enter(content, elem.parent(), elem);
+            } else {
+                if(content) {
+                    content.remove();
+                }
+            }
+        });
+
+        var shouldBeShown = function() {
+            var allowedRoles = attr.crGranted.split(",");
+            var roles = acl.getRoles();
+            var currentRole = acl.getRole();
+            if (allowedRoles.indexOf(currentRole) != -1) {
+                return true;
+            } else {
+                var granted = false;
+                angular.forEach(allowedRoles, function(role) {
+                    if (angular.isDefined(roles[currentRole])) {
+                        var inheritedRoles = roles[currentRole];
+                        if (inheritedRoles.indexOf(role) > -1) {
+                            granted = true;
+                        }
+                    }
+                });
+
+                return granted;
+            }
         };
-        content = clone;
-      });
-
-
-      scope.$watch(function() {
-        return acl.getRole();
-      }, function(newV, oldV){
-      var allowedRoles = attr.crGranted.split(",");
-      if(allowedRoles.indexOf(acl.getRole()) != -1) {
-        $animate.enter(content, elem.parent(), elem);
-      }
-      else {
-        if(content) {
-          content.remove();
-        }
-      }
-      });
     }
   };
 }]);
